@@ -4,65 +4,78 @@ import { SectionProps, Experience as ExperienceType } from '../types';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { getExperiences } from '../services/dataService';
 
-const ExperienceItem: React.FC<{ job: ExperienceType; index: number }> = ({ job, index }) => {
-  const { ref, isVisible } = useScrollAnimation(0.15);
+const ExperienceItem: React.FC<{ job: ExperienceType; index: number; total: number }> = ({ job, index, total }) => {
+  const { ref, isVisible } = useScrollAnimation(0.1);
   const [isHovered, setIsHovered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const itemRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (itemRef.current) {
-      const rect = itemRef.current.getBoundingClientRect();
-      setMousePos({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-      });
+    if (imgRef.current) {
+      const x = e.clientX;
+      const y = e.clientY;
+      
+      // Move image near cursor using fixed position
+      // Adjust offset to position image nicely relative to cursor
+      imgRef.current.style.transform = `translate3d(${x + 20}px, ${y - 100}px, 0)`;
     }
   };
+
+  // Calculate sticky top offset: Base start + (Index * Stack Height)
+  // 120px is roughly top-32 (header spacing)
+  // 50px is the visible "lip" of the card underneath
+  const stickyTop = `calc(120px + ${index * 50}px)`;
 
   return (
     <div 
       ref={ref}
-      className={`group border-l-2 border-neutral-200 pl-8 py-2 relative reveal-hidden ${isVisible ? 'reveal-visible' : ''}`}
-      style={{ transitionDelay: `${index * 150}ms` }}
+      className={`sticky w-full mb-4 reveal-hidden ${isVisible ? 'reveal-visible' : ''}`}
+      style={{ 
+        top: stickyTop, 
+        zIndex: index + 1,
+        transitionDelay: `${index * 100}ms` 
+      }}
     >
       <div 
-        ref={itemRef}
-        className="relative z-10"
+        ref={containerRef}
+        className="relative bg-white border border-neutral-200 p-6 md:p-10 transition-all duration-500 hover:border-neutral-900 group cursor-default min-h-[250px] flex flex-col justify-between"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onMouseMove={handleMouseMove}
       >
-          <div className="absolute left-[-41px] top-0 h-full w-[2px] bg-neutral-900 origin-top scale-y-0 transition-transform duration-700 ease-out-expo group-hover:scale-y-100"></div>
-          <div className="absolute left-[-37px] top-3 w-2 h-2 bg-neutral-900 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100"></div>
-          
-          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-3">
-            <h3 className="text-2xl font-bold text-neutral-900 tracking-tight">{job.role}</h3>
-            <span className="text-neutral-400 font-mono text-sm mt-1 sm:mt-0 bg-white px-2 z-10">{job.period}</span>
+          {/* Card Header */}
+          <div className="flex flex-col md:flex-row md:items-baseline justify-between mb-6 border-b border-neutral-100 pb-4">
+            <h3 className="text-2xl md:text-3xl font-bold text-neutral-900 tracking-tight group-hover:translate-x-2 transition-transform duration-300">
+                {job.role}
+            </h3>
+            <span className="text-neutral-400 font-mono text-sm mt-2 md:mt-0 uppercase tracking-wider">
+                {job.period}
+            </span>
           </div>
-          <h4 className="text-lg text-neutral-600 mb-4 font-medium">{job.company}</h4>
-          <p className="text-neutral-500 leading-relaxed max-w-2xl">
-            {job.description}
-          </p>
+
+          {/* Card Body */}
+          <div>
+             <h4 className="text-lg font-bold text-neutral-900 mb-3">{job.company}</h4>
+             <p className="text-neutral-500 leading-relaxed max-w-3xl text-base md:text-lg">
+                {job.description}
+             </p>
+          </div>
+          
+          {/* Decorative Number */}
+          <div className="absolute bottom-6 right-6 text-6xl font-bold text-neutral-100 -z-0 select-none group-hover:text-neutral-900/5 transition-colors">
+            {String(index + 1).padStart(2, '0')}
+          </div>
 
           {/* Floating Image Reveal */}
           {job.image && (
             <div 
-              className="fixed pointer-events-none z-50 w-64 h-40 bg-neutral-900 overflow-hidden shadow-2xl transition-opacity duration-300 ease-out"
+              ref={imgRef}
+              className="fixed top-0 left-0 pointer-events-none z-[60] w-72 h-48 bg-neutral-900 overflow-hidden shadow-2xl transition-opacity duration-200 ease-out will-change-transform border-2 border-white"
               style={{
                 opacity: isHovered ? 1 : 0,
-                left: 0, // We use fixed positioning relative to viewport but update via transform based on mouse
-                top: 0,
-                transform: `translate(${mousePos.x + 20}px, ${mousePos.y - 80}px)`, // Local coordinates won't work well with fixed, let's try a different approach or use clientX from parent
-                // Note: For a robust implementation, we usually track clientX/Y globally or relative to viewport. 
-                // Here, since we used local logic in previous steps, let's fix the positioning logic slightly or assume the parent is relative.
-                // Actually, let's stick to a simple absolute position if the container allows, or simple display none.
-                display: isHovered ? 'block' : 'none',
-                // Re-adjusting to be absolute relative to the item for simplicity in this context:
-                position: 'absolute'
               }}
             >
-               <img src={job.image} alt={job.company} className="w-full h-full object-cover" />
+               <img src={job.image} alt={job.company} className="w-full h-full object-cover grayscale" />
             </div>
           )}
       </div>
@@ -79,25 +92,37 @@ const Experience: React.FC<SectionProps> = ({ id }) => {
   }, []);
 
   return (
-    <section id={id} className="py-32 px-6 md:px-12 max-w-7xl mx-auto bg-neutral-50/50">
+    <section id={id} className="py-32 px-6 md:px-12 max-w-7xl mx-auto bg-neutral-50/30">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        {/* Left Column - Sticky Title */}
         <div className="lg:col-span-4">
           <div className="sticky top-32">
             <h2 
                 ref={titleRef}
-                className={`text-4xl md:text-5xl font-bold tracking-tighter text-neutral-900 mb-6 reveal-hidden ${titleVisible ? 'reveal-visible' : ''}`}
+                className={`text-4xl md:text-6xl font-bold tracking-tighter text-neutral-900 mb-8 reveal-hidden ${titleVisible ? 'reveal-visible' : ''}`}
             >
                 Experience
             </h2>
-            <p className="text-neutral-500 leading-relaxed max-w-xs">
-                My professional journey through various roles in the tech industry.
+            <p className="text-neutral-500 text-lg leading-relaxed max-w-xs mb-8">
+                A timeline of my professional career, focusing on scalable architecture and user-centric design.
             </p>
+            
+            <div className="hidden lg:block h-[1px] w-12 bg-neutral-900 mb-4"></div>
+            <div className="hidden lg:block text-xs font-mono text-neutral-400">
+                SCROLL TO EXPLORE
+            </div>
           </div>
         </div>
         
-        <div className="lg:col-span-8 flex flex-col gap-16">
+        {/* Right Column - Sticky Stack Cards */}
+        <div className="lg:col-span-8 relative min-h-[100vh]">
           {experiences.map((job, index) => (
-            <ExperienceItem key={job.id} job={job} index={index} />
+            <ExperienceItem 
+                key={job.id} 
+                job={job} 
+                index={index} 
+                total={experiences.length} 
+            />
           ))}
         </div>
       </div>

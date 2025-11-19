@@ -1,22 +1,46 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ArrowDown } from './Icons';
 import Magnetic from './Magnetic';
 import TextScramble from './TextScramble';
 
 const Hero: React.FC = () => {
-  const [offset, setOffset] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const parallaxRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setLoaded(true);
+    // Add a small delay to sync with splash screen exit
+    const timer = setTimeout(() => {
+      setLoaded(true);
+    }, 200);
+
+    let ticking = false;
+
     const handleScroll = () => {
-      requestAnimationFrame(() => {
-        setOffset(window.pageYOffset);
-      });
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const offset = window.scrollY;
+          
+          // Direct DOM update for performance with GPU acceleration
+          if (parallaxRef.current) {
+            parallaxRef.current.style.transform = `translate3d(0, ${offset * 0.2}px, 0)`;
+          }
+          if (bgRef.current) {
+            bgRef.current.style.transform = `translate3d(0, -${offset * 0.15}px, 0)`;
+          }
+          
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timer);
+    };
   }, []);
 
   const titleLines = ["CRAFTING", "DIGITAL", "REALITY."];
@@ -27,8 +51,8 @@ const Hero: React.FC = () => {
         
         {/* Title with Reveal Mask Animation */}
         <div 
+          ref={parallaxRef}
           className="mb-8 will-change-transform"
-          style={{ transform: `translateY(${offset * 0.2}px)` }} // Parallax Effect
         >
           {titleLines.map((line, idx) => (
             <span key={idx} className={`text-reveal-wrapper ${loaded ? 'text-reveal-visible' : ''}`}>
@@ -44,7 +68,6 @@ const Hero: React.FC = () => {
         
         <div 
           className={`transition-all duration-1000 delay-700 ease-out-expo ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-          style={{ transform: `translateY(${offset * 0.1}px)` }}
         >
           <p className="text-lg md:text-xl text-neutral-600 max-w-xl leading-relaxed mb-12 border-l border-neutral-900 pl-6 ml-2">
             I am a Senior Frontend Engineer specializing in building high-performance, accessible, and minimalist web applications using modern technologies.
@@ -75,13 +98,13 @@ const Hero: React.FC = () => {
 
       {/* Background Subtle Parallax Element */}
       <div 
-        className="absolute top-[10%] -right-[10%] w-[50vw] h-[50vw] bg-neutral-100 rounded-full -z-10 blur-3xl opacity-60"
-        style={{ transform: `translateY(-${offset * 0.15}px)` }}
+        ref={bgRef}
+        className="absolute top-[10%] -right-[10%] w-[50vw] h-[50vw] bg-neutral-100 rounded-full -z-10 blur-3xl opacity-60 will-change-transform"
       />
       
       {/* Scroll Indicator */}
       <div 
-        className={`absolute bottom-10 right-6 md:right-12 hidden md:flex flex-col items-center gap-4 transition-opacity duration-500 ${offset > 100 ? 'opacity-0' : 'opacity-100'}`}
+        className={`absolute bottom-10 right-6 md:right-12 hidden md:flex flex-col items-center gap-4 transition-opacity duration-1000 delay-1000 ${loaded ? 'opacity-100' : 'opacity-0'}`}
       >
         <span className="vertical-rl text-xs uppercase tracking-widest text-neutral-400 animate-pulse" style={{ writingMode: 'vertical-rl' }}>Scroll</span>
         <div className="w-[1px] h-12 bg-neutral-200 overflow-hidden relative">

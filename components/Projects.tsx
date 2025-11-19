@@ -35,7 +35,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, onClick }) =>
   };
   
   return (
-    <div 
+    <article 
       ref={ref}
       onClick={() => onClick(project)}
       className={`group cursor-pointer block reveal-hidden ${isVisible ? 'reveal-visible' : ''}`}
@@ -56,8 +56,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, onClick }) =>
         >
             <img 
               src={project.image} 
-              alt={project.title} 
+              alt={`Screenshot of ${project.title} - ${project.category}`} 
+              loading="lazy"
+              width="800"
+              height="600"
               className="w-full h-full object-cover transition-all duration-700 ease-out-expo grayscale group-hover:grayscale-0"
+              style={{ filter: 'var(--hover-filter, none)' }}
             />
         </div>
         
@@ -87,7 +91,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, onClick }) =>
           <ArrowUpRight className="w-6 h-6 text-neutral-400 group-hover:text-neutral-900" />
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 
@@ -115,7 +119,7 @@ const Projects: React.FC<SectionProps> = ({ id }) => {
 
   return (
     <section id={id} className="py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-neutral-200">
-      <div 
+      <header 
         ref={headerRef}
         className={`flex flex-col md:flex-row md:items-end justify-between mb-16 reveal-hidden ${headerVisible ? 'reveal-visible' : ''}`}
       >
@@ -126,13 +130,15 @@ const Projects: React.FC<SectionProps> = ({ id }) => {
             </p>
         </div>
         <p className="text-neutral-400 mt-8 md:mt-0 text-sm font-mono bg-neutral-100 px-4 py-2 rounded-full">2021 — PRESENT</p>
-      </div>
+      </header>
 
       {/* Filter Categories */}
-      <div className="flex flex-wrap gap-4 mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-backwards">
+      <div className="flex flex-wrap gap-4 mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-backwards" role="tablist" aria-label="Project filters">
         {categories.map((category) => (
             <button
                 key={category}
+                role="tab"
+                aria-selected={filter === category}
                 onClick={() => setFilter(category)}
                 className={`text-sm uppercase tracking-widest px-5 py-2 rounded-full border transition-all duration-300 ${
                     filter === category 
@@ -164,6 +170,13 @@ const Projects: React.FC<SectionProps> = ({ id }) => {
             onClose={() => setSelectedProject(null)} 
         />
       )}
+      
+      {/* SVG Filter Application via CSS Variable for specific Cards */}
+      <style>{`
+        .group:hover img {
+            --hover-filter: url(#distortionFilter);
+        }
+      `}</style>
     </section>
   );
 };

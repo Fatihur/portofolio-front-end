@@ -10,8 +10,10 @@ import SplashScreen from './components/SplashScreen';
 import CustomCursor from './components/CustomCursor';
 import Marquee from './components/Marquee';
 import ProgressBar from './components/ProgressBar';
-import Noise from './components/Noise';
+import GridBackground from './components/GridBackground';
 import AdminPanel from './components/AdminPanel';
+import BentoGrid from './components/BentoGrid';
+import Capabilities from './components/Capabilities';
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -53,7 +55,7 @@ const App: React.FC = () => {
       {/* Interactive Elements */}
       <CustomCursor />
       <ProgressBar />
-      <Noise />
+      <GridBackground />
       
       {/* Splash Screen */}
       {isLoading && <SplashScreen onComplete={handleSplashComplete} />}
@@ -64,6 +66,7 @@ const App: React.FC = () => {
         
         <main>
           <Hero />
+          <Capabilities id="capabilities" />
           <Projects id="projects" />
           <Experience id="experience" />
           
@@ -74,28 +77,7 @@ const App: React.FC = () => {
           />
 
           <section id="about" className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
-             <div className="grid md:grid-cols-2 gap-12">
-               <h2 className="text-4xl font-bold tracking-tighter">About Me</h2>
-               <div className="text-lg text-neutral-600 leading-relaxed space-y-6">
-                 <p>
-                   I believe that good design is as little design as possible. My approach is grounded in the Swiss Style philosophy: prioritizing content, readability, and objectivity.
-                 </p>
-                 <p>
-                   With a strong foundation in computer science and years of practical application in React ecosystems, I build digital products that are not only visually striking but robust and scalable.
-                 </p>
-                 <div className="pt-6">
-                   <h3 className="text-sm font-bold uppercase tracking-widest text-neutral-900 mb-4">Tech Stack</h3>
-                   <div className="flex flex-wrap gap-x-8 gap-y-2 text-neutral-600 font-mono text-sm">
-                     <span className="hover:text-neutral-900 cursor-default transition-colors">React / Next.js</span>
-                     <span className="hover:text-neutral-900 cursor-default transition-colors">TypeScript</span>
-                     <span className="hover:text-neutral-900 cursor-default transition-colors">Tailwind CSS</span>
-                     <span className="hover:text-neutral-900 cursor-default transition-colors">Node.js</span>
-                     <span className="hover:text-neutral-900 cursor-default transition-colors">PostgreSQL</span>
-                     <span className="hover:text-neutral-900 cursor-default transition-colors">Gemini AI</span>
-                   </div>
-                 </div>
-               </div>
-             </div>
+             <BentoGrid />
           </section>
           <Contact id="contact" />
         </main>

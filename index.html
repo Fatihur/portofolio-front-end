@@ -4,7 +4,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio | Modern & Clean</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>Dev Portfolio | Senior Frontend Engineer & UI Designer</title>
+    <meta name="title" content="Dev Portfolio | Senior Frontend Engineer & UI Designer">
+    <meta name="description" content="Portfolio resmi Dev, Senior Frontend Engineer spesialis React, TypeScript, dan Swiss Style UI Design. Lihat showcase project dan pengalaman kerja profesional.">
+    <meta name="keywords" content="Frontend Engineer, React Developer, UI/UX Designer, Portfolio, Swiss Style, Web Development, TypeScript, Tailwind CSS">
+    <meta name="author" content="Dev">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dev-portfolio.com/">
+    <meta property="og:title" content="Dev Portfolio | Senior Frontend Engineer & UI Designer">
+    <meta property="og:description" content="Portfolio resmi Dev, Senior Frontend Engineer spesialis React, TypeScript, dan Swiss Style UI Design.">
+    <meta property="og:image" content="https://dev-portfolio.com/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://dev-portfolio.com/">
+    <meta property="twitter:title" content="Dev Portfolio | Senior Frontend Engineer & UI Designer">
+    <meta property="twitter:description" content="Portfolio resmi Dev, Senior Frontend Engineer spesialis React, TypeScript, dan Swiss Style UI Design.">
+    <meta property="twitter:image" content="https://dev-portfolio.com/og-image.jpg">
+
+    <!-- Favicon (Placeholder) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>D</text></svg>">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -116,13 +142,24 @@
         }
       }
     </style>
+    <!-- SVG Filter for Distortion -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="distortionFilter">
+          <feTurbulence type="fractalNoise" baseFrequency="0.01 0.005" numOctaves="2" seed="2" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+    </svg>
   <script type="importmap">
 {
   "imports": {
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
     "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "clsx": "https://esm.sh/clsx@2.1.1",
+    "tailwind-merge": "https://esm.sh/tailwind-merge@2.3.0"
   }
 }
 </script>

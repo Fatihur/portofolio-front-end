@@ -164,10 +164,10 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                             {String(currentSlide + 1).padStart(2, '0')} / {String(project.gallery.length).padStart(2, '0')}
                         </span>
                         <div className="flex gap-2">
-                            <button onClick={prevSlide} className="p-3 border border-neutral-200 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors rounded-full">
+                            <button onClick={prevSlide} aria-label="Previous Image" className="p-3 border border-neutral-200 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors rounded-full">
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
-                            <button onClick={nextSlide} className="p-3 border border-neutral-200 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors rounded-full">
+                            <button onClick={nextSlide} aria-label="Next Image" className="p-3 border border-neutral-200 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors rounded-full">
                                 <ChevronRight className="w-5 h-5" />
                             </button>
                         </div>
@@ -184,7 +184,8 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                               <div key={index} className="min-w-full h-full relative">
                                   <img 
                                       src={imgUrl} 
-                                      alt={`Gallery ${index + 1}`}
+                                      alt={`Gallery Image ${index + 1}`}
+                                      loading="lazy"
                                       className="w-full h-full object-cover"
                                   />
                               </div>
@@ -210,6 +211,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
             <button 
                 onClick={() => setIsLightboxOpen(false)}
                 className="absolute top-6 right-6 p-3 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all z-[80]"
+                aria-label="Close Lightbox"
             >
                 <CloseIcon className="w-8 h-8" />
             </button>
@@ -218,7 +220,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
             <div className="relative w-full h-full flex items-center justify-center p-6 md:p-24">
                 <img 
                     src={project.gallery[currentSlide]} 
-                    alt="Fullscreen view" 
+                    alt={`Fullscreen Gallery Image ${currentSlide + 1}`} 
                     className="max-w-full max-h-full object-contain shadow-2xl"
                     onClick={(e) => e.stopPropagation()}
                 />
@@ -228,12 +230,14 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
             <button 
                 onClick={(e) => { e.stopPropagation(); prevSlide(); }}
                 className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-4 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all z-[80]"
+                aria-label="Previous Image"
             >
                 <ChevronLeft className="w-8 h-8" />
             </button>
             <button 
                 onClick={(e) => { e.stopPropagation(); nextSlide(); }}
                 className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-4 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all z-[80]"
+                aria-label="Next Image"
             >
                 <ChevronRight className="w-8 h-8" />
             </button>

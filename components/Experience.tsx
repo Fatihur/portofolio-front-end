@@ -27,7 +27,7 @@ const ExperienceItem: React.FC<{ job: ExperienceType; index: number; total: numb
   const stickyTop = `calc(120px + ${index * 50}px)`;
 
   return (
-    <div 
+    <article 
       ref={ref}
       className={`sticky w-full mb-4 reveal-hidden ${isVisible ? 'reveal-visible' : ''}`}
       style={{ 
@@ -75,11 +75,16 @@ const ExperienceItem: React.FC<{ job: ExperienceType; index: number; total: numb
                 opacity: isHovered ? 1 : 0,
               }}
             >
-               <img src={job.image} alt={job.company} className="w-full h-full object-cover grayscale" />
+               <img 
+                src={job.image} 
+                alt={`${job.company} office or logo`} 
+                loading="lazy" 
+                className="w-full h-full object-cover grayscale" 
+               />
             </div>
           )}
       </div>
-    </div>
+    </article>
   );
 };
 

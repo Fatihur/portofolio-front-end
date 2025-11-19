@@ -11,10 +11,25 @@ import CustomCursor from './components/CustomCursor';
 import Marquee from './components/Marquee';
 import ProgressBar from './components/ProgressBar';
 import Noise from './components/Noise';
+import AdminPanel from './components/AdminPanel';
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showContent, setShowContent] = useState(false);
+  const [isAdminRoute, setIsAdminRoute] = useState(false);
+
+  useEffect(() => {
+    const checkRoute = () => {
+      setIsAdminRoute(window.location.hash === '#/admin');
+    };
+
+    // Initial check
+    checkRoute();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', checkRoute);
+    return () => window.removeEventListener('hashchange', checkRoute);
+  }, []);
 
   const handleSplashComplete = () => {
     setIsLoading(false);
@@ -26,6 +41,11 @@ const App: React.FC = () => {
         setShowContent(true);
     }
   }, [isLoading]);
+
+  // If Admin Route, render Admin Panel directly (bypass Splash for Admin usually)
+  if (isAdminRoute) {
+    return <AdminPanel />;
+  }
 
   return (
     <div className="bg-white min-h-screen text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white relative cursor-none-desktop">

@@ -1,10 +1,10 @@
 
-import React, { useRef, useState, useMemo } from 'react';
-import { PROJECTS } from '../constants';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { ArrowUpRight } from './Icons';
 import { SectionProps, Project } from '../types';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import ProjectDetailModal from './ProjectDetailModal';
+import { getProjects } from '../services/dataService';
 
 interface ProjectCardProps {
     project: Project;
@@ -95,17 +95,23 @@ const Projects: React.FC<SectionProps> = ({ id }) => {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [filter, setFilter] = useState('All');
+  const [projectsData, setProjectsData] = useState<Project[]>([]);
+
+  // Load data from service on mount
+  useEffect(() => {
+    setProjectsData(getProjects());
+  }, []);
 
   // Extract unique categories from projects
   const categories = useMemo(() => {
-    return ['All', ...new Set(PROJECTS.map(p => p.category))];
-  }, []);
+    return ['All', ...new Set(projectsData.map(p => p.category))];
+  }, [projectsData]);
 
   // Filter projects based on selection
   const filteredProjects = useMemo(() => {
-    if (filter === 'All') return PROJECTS;
-    return PROJECTS.filter(p => p.category === filter);
-  }, [filter]);
+    if (filter === 'All') return projectsData;
+    return projectsData.filter(p => p.category === filter);
+  }, [filter, projectsData]);
 
   return (
     <section id={id} className="py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-neutral-200">

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { NAV_LINKS } from '../constants';
 import { MenuIcon, CloseIcon, ArrowRight } from './Icons';
 import Magnetic from './Magnetic';
+import TextScramble from './TextScramble';
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -99,7 +100,9 @@ const Navbar: React.FC = () => {
               }`}
               style={{ transitionDelay: `${100 + (idx * 100)}ms` }}
             >
-              <span className="group-hover:translate-x-4 transition-transform duration-300">{link.name}</span>
+              <span className="group-hover:translate-x-4 transition-transform duration-300">
+                {link.name}
+              </span>
               <ArrowRight className="w-8 h-8 text-neutral-300 opacity-0 -translate-x-8 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 ease-out-expo" />
             </a>
           ))}

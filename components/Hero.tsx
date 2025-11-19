@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowDown } from './Icons';
 import Magnetic from './Magnetic';
+import TextScramble from './TextScramble';
 
 const Hero: React.FC = () => {
   const [offset, setOffset] = useState(0);
@@ -55,7 +56,7 @@ const Hero: React.FC = () => {
                 href="#projects" 
                 className="bg-neutral-900 text-white px-8 py-4 text-sm font-semibold tracking-widest uppercase hover:bg-neutral-800 transition-all hover:scale-105 active:scale-95 flex items-center gap-3 group rounded-sm"
               >
-                View Work
+                <TextScramble text="View Work" revealSpeed={0.5} />
                 <ArrowDown className="group-hover:translate-y-1 transition-transform" />
               </a>
              </Magnetic>
@@ -65,7 +66,7 @@ const Hero: React.FC = () => {
                 href="#contact" 
                 className="text-neutral-900 px-8 py-4 text-sm font-semibold tracking-widest uppercase border border-neutral-200 hover:border-neutral-900 transition-colors rounded-sm block"
               >
-                Contact Me
+                <TextScramble text="Contact Me" revealSpeed={0.5} />
               </a>
              </Magnetic>
           </div>

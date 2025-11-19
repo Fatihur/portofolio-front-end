@@ -1,5 +1,6 @@
 
 import React from 'react';
+import TextScramble from './TextScramble';
 
 interface MarqueeProps {
   items: string[];
@@ -14,7 +15,8 @@ const Marquee: React.FC<MarqueeProps> = ({ items, direction = 'left', className 
         {/* Triple duplication for smooth infinite loop */}
         {[...items, ...items, ...items, ...items].map((item, idx) => (
           <span key={idx} className="text-6xl md:text-8xl font-bold uppercase tracking-tighter opacity-30 hover:opacity-100 transition-opacity duration-500 cursor-default">
-            {item} <span className="mx-4 text-neutral-700">•</span>
+            <TextScramble text={item} /> 
+            <span className="mx-4 text-neutral-700">•</span>
           </span>
         ))}
       </div>
